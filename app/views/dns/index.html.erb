@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DigDNS - DNS Lookup Tool</title>
+  <script>
+    function performLookup() {
+      let domain = document.getElementById("domain").value;
+      let recordType = document.getElementById("record_type").value;
+
+      if (!domain) {
+        document.getElementById("results").innerHTML = "<pre>Please enter a domain.</pre>";
+        return;
+      }
+
+      fetch(`/lookup?domain=${domain}&record_type=${recordType}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("results").innerHTML = `<pre>${data.result}</pre>`;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          document.getElementById("results").innerHTML = "<pre>An error occurred.</pre>";
+        });
+    }
+  </script>
+</head>
+<body>
+  <h1>DigDNS - DNS Lookup Tool</h1>
+
+  <label>Domain:</label>
+  <input type="text" id="domain" placeholder="example.com">
+  
+  <label>Record Type:</label>
+  <select id="record_type">
+    <option value="A">A</option>
+    <option value="MX">MX</option>
+    <option value="NS">NS</option>
+    <option value="CNAME">CNAME</option>
+  </select>
+
+  <button onclick="performLookup()">Lookup</button>
+
+  <h2>Results:</h2>
+  <div id="results" style="background: #f5f5f5; padding: 10px; font-family: monospace; white-space: pre-wrap;"></div>
+</body>
+</html>
